@@ -11,6 +11,7 @@
 
     <modules>
         <module>dubbo-annotation</module>
+        <module>grpc</module>
     </modules>
 
     <properties>
