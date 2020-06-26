@@ -1,0 +1,26 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder/>
+
+    <dubbo:application name="demo-generic-provider"/>
+
+    <dubbo:protocol id="dubbo" name="dubbo" port="8989"/>
+
+    <dubbo:registry address="zookeeper://${zookeeper.address:127.0.0.1}:${zookeeper.port:2181}"/>
+
+    <bean id="genericServiceImpl" class="will.test.rpc.dubbo.provider.GenericServiceImpl"/>
+    <!-- No need to specify generic="true" here since dubbo auto checks if ref is GenericService -->
+    <!-- Note that will.test.rpc.dubbo.provider.IHelloService doesn't exist at all -->
+    <dubbo:service scope="remote" interface="will.test.rpc.dubbo.provider.IHelloService" ref="genericServiceImpl"
+                   protocol="dubbo" proxy="jdk"/>
+
+    <bean id="echoServiceImpl" class="will.test.rpc.dubbo.provider.EchoServiceImpl"/>
+    <!-- Here we have to explicitly enable generic if we want to let consumer use generic way to call the service that
+         doesn't inherit from GenericService. See more details in org.apache.dubbo.rpc.filter.GenericFilter -->
+    <dubbo:service scope="remote" interface="will.test.rpc.dubbo.provider.IEchoService" ref="echoServiceImpl"
+                   protocol="dubbo" proxy="jdk" generic="true"/>
+
+</beans>

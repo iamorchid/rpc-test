@@ -7,11 +7,12 @@
 
     <dubbo:application name="demo-hessian-provider"/>
 
-    <dubbo:protocol id="hessian" name="hessian" port="8788"/>
+    <dubbo:protocol id="dubbo" name="dubbo" port="8787"/>
+    <dubbo:protocol id="hessian" name="hessian" port="8788" />
 
     <dubbo:registry address="zookeeper://${zookeeper.address:127.0.0.1}:${zookeeper.port:2181}"/>
 
     <bean id="greeterImpl" class="will.test.rpc.dubbo.impl.GreeterImpl"/>
-    <dubbo:service interface="will.test.rpc.dubbo.api.IGreeter" ref="greeterImpl" protocol="hessian"/>
+    <dubbo:service scope="remote" interface="will.test.rpc.dubbo.api.IGreeter" ref="greeterImpl" protocol="dubbo,hessian" proxy="jdk"/>
 
 </beans>
