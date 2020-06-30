@@ -24,6 +24,8 @@ import will.test.rpc.dubbo.api.HelloReply;
 import will.test.rpc.dubbo.api.HelloRequest;
 import will.test.rpc.dubbo.api.IGreeter;
 
+import java.util.concurrent.CountDownLatch;
+
 public class BasicConsumer {
 
     public static void main(String[] args) throws Exception {
@@ -31,11 +33,13 @@ public class BasicConsumer {
                 new ClassPathXmlApplicationContext("spring/dubbo-demo-consumer.xml");
         context.start();
 
-        IGreeter greeter = (IGreeter) context.getBean("greeter");
+        IGreeter greeter = (IGreeter) context.getBean("greeterRefId");
 
         System.out.println("-------- Start simple unary call test -------- ");
         HelloReply reply = greeter.sayHello(new HelloRequest("hessian-consumer#0"));
         System.out.println("Result: " + reply.getMessage());
+
+        new CountDownLatch(1).await();
     }
 
 }
